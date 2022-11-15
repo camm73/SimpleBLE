@@ -75,7 +75,11 @@ std::map<uint16_t, std::vector<uint8_t>> Device1::ManufacturerData(bool refresh)
     return _manufacturer_data;
 }
 
-std::vector<uint8_t> Device1::AdvertisingFlags() {
+std::vector<uint8_t> Device1::AdvertisingFlags(bool refresh) {
+    if (refresh) {
+        property_refresh("AdvertisingFlags");
+    }
+
     std::scoped_lock lock(_property_update_mutex);
     return _advertising_flags;
 }
