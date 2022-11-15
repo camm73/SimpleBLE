@@ -75,6 +75,11 @@ std::map<uint16_t, std::vector<uint8_t>> Device1::ManufacturerData(bool refresh)
     return _manufacturer_data;
 }
 
+std::vector<uint8_t> Device1::AdvertisingFlags() {
+    std::scoped_lock lock(_property_update_mutex);
+    return _advertising_flags;
+}
+
 std::vector<std::string> Device1::ServiceData() {
     // Use the locally cached version to avoid parsing the map multiple times.
     std::scoped_lock lock(_property_update_mutex);
@@ -129,6 +134,14 @@ void Device1::property_changed(std::string option_name) {
                 raw_manuf_data.push_back(elem.get_byte());
             }
             _manufacturer_data[key] = raw_manuf_data;
+        }
+    } else if (option_name == "AdvertisingFlags") {
+        std::scoped_lock lock(_property_update_mutex);
+        std::vector<SimpleDBus::Holder> advertising_flags_data = _properties["AdvertisingFlags"].get_array();
+
+        _advertising_flags.clear();
+        for (auto& elem : advertising_flag_data) {
+            _advertising_flags.push_back(elem.get_byte());
         }
     } else if (option_name == "ServiceData") {
         std::scoped_lock lock(_property_update_mutex);
