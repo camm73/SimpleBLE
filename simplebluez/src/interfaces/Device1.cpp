@@ -140,7 +140,7 @@ void Device1::property_changed(std::string option_name) {
         std::vector<SimpleDBus::Holder> advertising_flags_data = _properties["AdvertisingFlags"].get_array();
 
         _advertising_flags.clear();
-        for (auto& elem : advertising_flag_data) {
+        for (auto& elem : advertising_flags_data) {
             _advertising_flags.push_back(elem.get_byte());
         }
     } else if (option_name == "ServiceData") {
